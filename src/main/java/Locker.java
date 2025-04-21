@@ -1,6 +1,7 @@
 public class Locker<T> {
   private int lockerNumber;
   private boolean isLocked;
+  private T item;
 
   // constructors
   public Locker(int lockerNumber, T item) {
