@@ -25,10 +25,10 @@ public class Locker<T> {
 
     public void viewItem() {
         if (!isLocked) {
-            System.out.println("Locker " + lockerNumber + " contains: " + item);
+            System.out.println("mixedtasks.Locker " + lockerNumber + " contains: " + item);
         }
         else {
-            System.out.println("Locker" + lockerNumber + " is locked. Cannot view items.");
+            System.out.println("mixedtasks.Locker" + lockerNumber + " is locked. Cannot view items.");
         }
     }
 

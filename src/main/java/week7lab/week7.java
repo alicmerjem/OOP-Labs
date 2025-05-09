@@ -1,4 +1,6 @@
-// ABSTRACT CLASS: Animal
+package week7lab;
+
+// ABSTRACT CLASS: mixedtasks.week7lab.Animal
 abstract class Animal {
     protected String name; // Field: name of the animal
 
@@ -13,8 +15,8 @@ abstract class Animal {
     }
 }
 
-// SUBCLASS: Dog
-class Dog extends Animal {
+// SUBCLASS: week7lab.Dog
+class Dog extends mixedtasks.Animal {
     public Dog(String name) {
         super(name);
     }
@@ -29,8 +31,8 @@ class Dog extends Animal {
     }
 }
 
-// SUBCLASS: Cat
-class Cat extends Animal {
+// SUBCLASS: week7lab.Cat
+class Cat extends mixedtasks.Animal {
     public Cat(String name) {
         super(name);
     }
@@ -45,13 +47,13 @@ class Cat extends Animal {
     }
 }
 
-// INTERFACE: Playable
+// INTERFACE: week7lab.Playable
 interface Playable {
     void play(); // Method to be implemented
     String getBrand(); // Added brand method
 }
 
-// CLASS: Guitar
+// CLASS: week7lab.Guitar
 class Guitar implements Playable {
     private String brand;
 
@@ -68,7 +70,7 @@ class Guitar implements Playable {
     }
 }
 
-// CLASS: Piano
+// CLASS: week7lab.Piano
 class Piano implements Playable {
     private String brand;
 
@@ -85,7 +87,7 @@ class Piano implements Playable {
     }
 }
 
-// CLASS: Drum
+// CLASS: week7lab.Drum
 class Drum implements Playable {
     private String brand;
 
@@ -102,7 +104,7 @@ class Drum implements Playable {
     }
 }
 
-// ABSTRACT CLASS: Shape
+// ABSTRACT CLASS: week7lab.Shape
 abstract class Shape {
     protected String color; // Field: color of the shape
 
@@ -117,7 +119,7 @@ abstract class Shape {
     }
 }
 
-// SUBCLASS: Circle
+// SUBCLASS: week7lab.Circle
 class Circle extends Shape {
     private double radius;
 
@@ -131,7 +133,7 @@ class Circle extends Shape {
     }
 }
 
-// SUBCLASS: Rectangle
+// SUBCLASS: week7lab.Rectangle
 class Rectangle extends Shape {
     private double width;
     private double height;
@@ -147,7 +149,7 @@ class Rectangle extends Shape {
     }
 }
 
-// ABSTRACT CLASS: Employee
+// ABSTRACT CLASS: week7lab.Employee
 abstract class Employee {
     protected String name;
     protected double salary;
@@ -164,12 +166,12 @@ abstract class Employee {
     }
 }
 
-// INTERFACE: Reportable
+// INTERFACE: week7lab.Reportable
 interface Reportable {
     String generateReport(); // Method to be implemented
 }
 
-// SUBCLASS: Developer
+// SUBCLASS: week7lab.Developer
 class Developer extends Employee implements Reportable {
     private String programmingLanguage;
 
@@ -183,11 +185,11 @@ class Developer extends Employee implements Reportable {
     }
 
     public String generateReport() {
-        return "Developer Report - " + getDetails() + ", Language: " + programmingLanguage + ", Bonus: " + calculateBonus();
+        return "week7lab.Developer Report - " + getDetails() + ", Language: " + programmingLanguage + ", Bonus: " + calculateBonus();
     }
 }
 
-// SUBCLASS: Manager
+// SUBCLASS: week7lab.Manager
 class Manager extends Employee implements Reportable {
     private int teamSize;
 
@@ -201,20 +203,20 @@ class Manager extends Employee implements Reportable {
     }
 
     public String generateReport() {
-        return "Manager Report - " + getDetails() + ", Team Size: " + teamSize + ", Bonus: " + calculateBonus();
+        return "week7lab.Manager Report - " + getDetails() + ", Team Size: " + teamSize + ", Bonus: " + calculateBonus();
     }
 }
 
 // MAIN CLASS
 public class Main {
     public static void main(String[] args) {
-        // TASK: Working with Animal
+        // TASK: Working with mixedtasks.week7lab.Animal
         System.out.println("=== Animals ===");
-        ArrayList<Animal> animals = new ArrayList<>();
+        ArrayList<mixedtasks.Animal> animals = new ArrayList<>();
         animals.add(new Dog("Buddy"));
         animals.add(new Cat("Whiskers"));
 
-        for (Animal animal : animals) {
+        for (mixedtasks.Animal animal : animals) {
             System.out.println("Name: " + animal.getName());
             animal.makeSound();
 
@@ -226,7 +228,7 @@ public class Main {
             }
         }
 
-        // TASK: Working with Playable interface
+        // TASK: Working with week7lab.Playable interface
         System.out.println("\n=== Instruments ===");
         Playable[] instruments = {
             new Guitar("Fender"),
@@ -239,7 +241,7 @@ public class Main {
             System.out.println("Brand: " + instrument.getBrand());
         }
 
-        // TASK: Working with Shape
+        // TASK: Working with week7lab.Shape
         System.out.println("\n=== Shapes ===");
         Shape[] shapes = {
             new Circle("Red", 3),
@@ -250,7 +252,7 @@ public class Main {
             System.out.println("Color: " + shape.getColor() + ", Area: " + shape.getArea());
         }
 
-        // TASK: Working with Employee and Reportable
+        // TASK: Working with week7lab.Employee and week7lab.Reportable
         System.out.println("\n=== Employees ===");
         ArrayList<Employee> employees = new ArrayList<>();
         employees.add(new Developer("Alice", 5000, "Java"));

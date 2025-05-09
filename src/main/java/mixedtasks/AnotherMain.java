@@ -1,3 +1,5 @@
+package mixedtasks;
+
 public class AnotherMain {
   public static void main(String[] args) {
     List<String> customerNames = List.of("Alice", "Bob", "Charlie");

@@ -1,3 +1,5 @@
+package mixedtasks;
+
 public class Elephant extends Animal implements Comparable<Elephant> {
   public Elephant(String name, int age) {
     super(name, age);

@@ -1,3 +1,5 @@
+package mixedtasks;
+
 public class Lion extends Animal implements Comparable<Lion> {
   public Lion(String name, int age) {
     super(name, age);
@@ -5,7 +7,7 @@ public class Lion extends Animal implements Comparable<Lion> {
 
   @Override
   public void speak() {
-    System.out.println(name + " the Lion says: Roar!");
+    System.out.println(name + " the mixedtasks.Lion says: Roar!");
   }
 
   @Override 

@@ -1,3 +1,5 @@
+package mixedtasks;
+
 import java.util.*;
 
 public class AnimalCage<T extends Animal & Comparable<T>> {

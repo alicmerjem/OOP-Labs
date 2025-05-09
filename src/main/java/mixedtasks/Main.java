@@ -1,3 +1,5 @@
+package mixedtasks;
+
 public class Main {
   public static void main(String[] args) {
     Product<Double> p1 = new Product<>("Laptop", 1200.00);

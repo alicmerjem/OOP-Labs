@@ -1,3 +1,5 @@
+package mixedtasks;
+
 public class MainAnimals {
   public static void main(String[] args) {
     AnimalCage<Lion> lionCage = new AnimalCage<>();

@@ -1,3 +1,5 @@
+package mixedtasks;
+
 public abstract class Animal {
   private String name;
   private int age;
@@ -8,11 +10,11 @@ public abstract class Animal {
   }
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
-  public String getAge() {
-    return age;
+  public int getAge() {
+    return this.age;
   }
 
   public abstract void speak(); // abstract methods don't have a body

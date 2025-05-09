@@ -2,7 +2,7 @@ package week7lab;
 import java.util.*;
 
 public class Everythingcombined {
-    // ABSTRACT CLASS: Animal
+    // ABSTRACT CLASS: mixedtasks.Animal
     abstract class Animal {
         protected String name; // Field: name of the animal
 
@@ -212,7 +212,7 @@ public class Everythingcombined {
     // MAIN CLASS
     public class Main {
         public static void main(String[] args) {
-            // TASK: Working with Animal
+            // TASK: Working with mixedtasks.Animal
             System.out.println("=== Animals ===");
             ArrayList<Animal> animals = new ArrayList<>();
             animals.add(new Dog("Buddy"));
