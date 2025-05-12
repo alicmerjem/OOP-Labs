@@ -1,0 +1,322 @@
+META PROGRAMMING
+REFLECTION API
+- The program can look at itself while it is running 
+- Example: inspecting fields, classes, methods and constructors
+- Syntax: myClassObject.getClass() (for example: myCat.getClass())
+- Use it at your own risk (breaks encapsulation, makes code harder to read, performance overhead, bypasses simple compile time safety checks)
+
+
+- Let us create a small class called Cat w/ 2 attributes (name and age)
+
+public class Cat {
+	private final String name;
+	private int age;
+
+	public Cat(String name, int age) {
+		this.name = name;
+		this.age = age;
+	}
+}
+
+- We will create getters and setters for the attributes
+- NOTE: the final attribute CANNOT have a setter
+
+public String getName() {
+	return name;
+}
+
+public int getAge() {
+	return age;
+}
+
+public int setAge() {
+	this.age = age;
+}
+
+
+- Now let us create a couple of more methods that will be needed for the demonstration purposes
+
+public static void thisIsPublicStaticMethods() {
+	System.out.println("I am public and static");
+}
+
+public void meow() {
+	System.out.println("meow");
+}
+
+public void saySomething(String something) {
+	System.out.println("I said something".concat(something));
+}
+
+private void heyThisIsPrivate() {
+	System.out.println("how did you even call this?");
+}
+
+
+- Now let us use some reflection in order to get all fields inside of the Cat class
+
+Cat myCat = new Cat("Cicko", 12);
+myCat.getClass();
+Field[] catFields = myCat.getClass().getDeclaredFields();
+
+for (Field f : catFields) {
+	System.out.println(f.getName());
+}
+
+
+- By using reflection ew can write code that can give us the structure of our Java class
+- Even final and private attributes can be accessed with no problem
+- Also, if you try to run this it will give you a compile time error:
+
+	myCat.name = "Macka";      // nuh uh, you cannot do this one
+
+
+- With the following code, we can change the value of the private final field: 
+
+for (Field field : catFields) {
+	if (field.getName().equals("name")) {
+		field.setAccessible(true);
+		field.set(myCat, "Micko Cicko");
+	}
+}
+
+
+USING REFLECTION ON METHODS
+- Hell yeah, we can do this too
+
+
+Method[] catMethods = myCat.getClass().getDeclaredMethods();
+
+for (Method method : catMethods) {
+	System.out.println(method.getName());
+	
+	// now we want to invoke / call method meow
+	if (method.getNamt().equals("meow")) {
+		method.invoke(myCat); // exception to be handled
+	} else if (method.getName().equals("saySomething")) {
+		method.invoke(myCat, "AW AW AW"); // parameters are passed in order they are in the method signature 
+	} else if (method.getName().equals("heyThisIsPrivate")) {
+		method.setAccessible(true);
+		method.invoke(myCat);
+	} else if (method.getName().equals("thisIsPublicStaticMethod")) {
+		method.invoke(null); // static methods dont need an object
+	}
+}
+
+	
+WHY DO WE NEED IT ALL? 
+- Heavily used in Java, especially in different frameworks (Spring uses it to see the classes you defined and to create objects from those classes)
+- Dependencies and Loads/Injects them dynamically based on Annotation information
+- We would use it for testing purposes: there is a class with private attributes and we want to access those in order to test the program
+- HOWEVER, BE CAREFUL WHEN USING IT. IT IS EASY TO BREAK EVERYTHING!!!
+
+
+
+ANNOTATIONS
+- An annotation is a construct associated with Java source code elements such as classes, methods and variables
+- Annotations provide information to a program at compile/run time based on which the program can take further action
+- An annotation processor processes these annotations at compile/run time to provide functionality such as:
+1) code generation
+2) error checking
+etc...
+
+- An annotation begins with the @ symbol
+- Some common examples: 
+1) @Override
+2) @SupressWarnings
+3) @Deprecated
+- These are built-in annotations provided by the java.lang package
+- We can make custom annotations (we will get to that in a minute)
+- IMPORTANT: An annotation itself does not perform any action. It simply provides information that can be used at compile/run time to perform further processing
+
+- Here is a simple example: 
+
+class Parent {
+	public String getName() {
+		return "Parent";
+	}
+}
+
+class Child extends Parent {
+	@Override
+	public String getname() {
+		return "Child";
+	}
+}
+
+- We know how @Override works, this is just a simple example
+- But, the above program throws an error during compile time because the getName() method in Child class is annotated with @Override even though it does not override a method from Parent class (there is no getname is Parent class)
+- So, @Override is case sensitive and be careful when it comes to that
+
+- @SupressWarnings is used when for example we have a variable that we never used in our code but it keeps giving us warnings
+- If we want to remove the warning, we just write:
+	@SupressWarnings("unused")
+- We see that annotations can also accept parameters as if they were methods
+
+- We can use annotations on:
+1) classes
+2) methods
+3) variables
+- We always place annotations above the code we want to annotate
+- We can also place it in the same line, but that is not recommended due to readability issues
+
+
+CUSTOM ANNOTATIONS
+- Let us say that we want to create a new class-level annotation called @VeryImportant so anybody who is processing this annotation knows that this is an important class
+- Creating the annotation is similar to creating a class or an interface
+- The syntax is as follows: 
+
+	public @interface VeryImportant { }
+
+- In order to specify how you plan to use the annotation, we have to use the annotation as well
+
+
+- First annotation is @Target and it allows us to specify which kind of Java element this annotation is valid to be used on
+- If you omit this annotation, your annotation is valid on ANY Java element
+- It can take the following values:
+1) ANNOTATION_TYPE - can be applied to other annotation types (@Retention, @Target)
+2) CONSTRUCTOR - for constructors, duh
+3) FIELD - for fields, e.g. instance variables or class-level fields
+4) LOCAL_VARIABLE - for local variables within methods
+5) METHOD - for methods
+6) PACKAGE - for package declarations (that is, at the beginning of class files)
+7) PARAMETER - for parameters in methods or constructors
+8) TYPE - for classes, interfaces, enums or records
+9) TYPE_PARAMETER - generic classes or methods
+10) TYPE_USE - can be applies to any use of a type, such as variables, return types, parameters, etc.
+
+- Since our annotations will be used on class level, we will say that it is allowed to be used on class level by using the following syntax: 
+
+	@Target(ElementType.TYPE)
+
+- If we try to use our annotation on some other Java element, it will give us a compile time error
+- If we want he annotation to be used on multiple  Java elements, let us say the class and method level, we would use the following syntax:
+
+	@Target({ElementType.TYPE, ElementType.METHOD})
+
+
+- Second annotation that we will specify for out annotation is called @Retention()
+- It indicates how long the annotated type should be kept in the program's lifecycle and it can take the following values:
+1) RUNTIME - it will be available to other code while program is running (reflection, for example @Target, @Retention)
+2) CLASS - Java will keep it during the compilation of the program, but once it starts running it will get rid of it (@Deprecated)
+3) SOURCE - Java will get rid of this annotation before it compiles the code (@Override)
+- We want our annotations to be available during the runtime, so we will use the following syntax: 
+
+	@Retention(RetentionPolicy.RUNTIME)
+
+
+TESTING ANNOTATION
+- Now we an test if our annotation is configured correctly by using reflection
+- We have created a new record called Lion and it has only one property (String name) that is annotated w/ @VeryImportant
+- In order to get the annotation and see is it present on our object we have used the following code: 
+
+Lion lion = new Lion("Lavcina");
+// now we can do anything we like w/ the annotation
+System.out.println(lion.getClass().isAnnotationPresent(VeryImportant.class));
+
+- The code will return that the annotation is present 
+
+
+METHOD LEVEL ANNOTATIONS
+- Next let us create an annotation @RunImmediately that will run the method immediately if the annotation is present above that method
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RunImmediately { }
+
+- Now we will create 2 methods in the Lion class, one that will have the annotation @RunImmediately and the other that will not have that annotation
+
+record Lion(String name) {
+	@RunImmediately 
+	public void saySomething() {
+		System.out.println("Lion method saySomething");
+	}
+
+	public void saySomethingButDontRun() {
+		System.out.println("Lion method saySomethingButDontRun");
+	}
+}
+
+- Now let us create a logic that will automatically run the method with the previously created annotation
+
+for (Method method : lion.getClass().getDeclaredMethods()) {
+	if(method.isAnnotationPresent(RunImmediately.class)) {
+		System.out.println("Method name is: " + method.getName());
+		method.invoke(lion);
+	}
+}
+
+- If we run this code, we will see that the method called saySomething will be ran by the program that was written
+
+
+ANNOTATIONS WITH PARAMETERS
+- What if we want to create an annotation that will run the method automatically n number of times where the n is a parameter that we pass to our annotation? 
+- Let us create an annotation called @RunImmediatelyNTimes that will as a parameter accept the integer that will specify how many times this method will be invoked automatically
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RunImmediatelyNTimes {
+	int times();
+}
+
+- In our annotation we have declared the method (only methods are allowed) called times
+- We can also give a default value to our methods (if we do not specify, you will be enforced to pass the parameter to the annotation)
+- Important thing to note is that the parameters to our interface can only be one of the following:
+1) primitive data types (int, Boolean...)
+2) string
+3) class type
+4) array of any of the above mentioned types
+- If we were to set a default value for the previously mentioned task it would look something like this: 
+
+	int times() default 3;
+
+
+- We want to develop a progam that will check if the annotation is present above the method and if it is we want to run it a specified amount of times
+
+for (Method method : lion.getClass().getDeclaredMethods()) {
+	if (method.isAnnotationPresent(RunImmediatelyNTimes.class)) {
+		RunImmediatelyNTimes annotation = 					method.getAnnotation(RunImmediatelyNTimes.class);
+	for (int i = 0; i < annotation.times(); i++) {
+			method.invoke(lion);
+		}
+	}
+}
+
+
+FIELD LEVEL ANNOTATIONS
+- Now we want to create a field level annotation but only on the String type fields in our class
+- We will create a new annotation called @ImportantString
+- Before that we will create a POJO class called Fox with two attributes (String name and int legs) and our name attribute will be annotated with @ImportantString annotation
+
+class Fox {
+	@ImportantString
+	private String name;
+	private int numOfLegs;
+
+	public Fox(String name, int numOfLegs) {
+		this.name = name;
+		this.numOfLegs = numOfLegs;
+	}
+}
+
+- Let us now create the annotation as well:
+
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ImportantString { }
+
+- So let us say that in our program we want to check whether the field in class Fox is annotated with @ImportantString annotation and if it is we want to print to the console the value of that attribute
+- Note that we have to change the accessibility of the attribute before accessing it as it has been declared as a private attribute
+
+
+Fox fox = new Fox("Lija", 4);
+
+for (Field field : fox.getClass.getDeclaredFields()) {
+	if (field.isAnnotationPresent(ImportantString.class)) {
+		field.setAccessible(true);
+		Object value = field.get(fox);
+		if (value instanceof String myFoxName) {
+			System.out.println("get the field name and 				toUppercase");
+		}
+	}
+}
